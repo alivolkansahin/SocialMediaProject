@@ -1,12 +1,12 @@
 server:
-  port: 9090
+  port: 9091
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: 1234
-    url: jdbc:postgresql://localhost:5432/SocialMedia_AuthDb
+    url: jdbc:postgresql://localhost:5432/SocialMedia_UserDb
 
   jpa:
     hibernate:

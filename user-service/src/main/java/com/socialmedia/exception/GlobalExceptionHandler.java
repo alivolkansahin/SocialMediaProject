@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AuthManagerException.class)
+    @ExceptionHandler(UserManagerException.class)
     @ResponseBody
-    public ResponseEntity<ErrorMessage> handleManagerException(AuthManagerException ex){
+    public ResponseEntity<ErrorMessage> handleManagerException(UserManagerException ex){
         HttpStatus httpStatus= ex.getErrorType().getHttpStatus();
         return new ResponseEntity<>(createError(ex),httpStatus);
     }
@@ -65,7 +65,7 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    private ErrorMessage createError(AuthManagerException ex){
+    private ErrorMessage createError(UserManagerException ex){
         return ErrorMessage.builder()
                 .code(ex.getErrorType().getCode())
                 .message(ex.getMessage())

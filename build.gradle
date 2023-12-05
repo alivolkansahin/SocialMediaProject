@@ -50,6 +50,10 @@ allprojects {
         implementation libs.springBootValidation
 
         implementation libs.swagger
+
+        implementation libs.jwt
+
+        implementation libs.springCloudOpenFeign
     }
 }
 

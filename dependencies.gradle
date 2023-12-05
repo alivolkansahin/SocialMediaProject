@@ -1,21 +1,25 @@
 ext{
     versions = [
             springBoot  : "2.7.17",
+            springCloud : "3.1.8",   // springframework versiyonu 5.3.30 ile uyumlu olacak bir openfeign versiyonu çekmek için mvnrepositorye baktık!
             lombok      : "1.18.30",
             mapStruct   : "1.5.5.Final",
             swagger     : "1.6.15",
-            postgresql  : "42.3.8"
+            postgresql  : "42.3.8",
+            jwt         : "4.4.0"
     ]
     libs = [
             springBootWeb          : "org.springframework.boot:spring-boot-starter-web:$versions.springBoot",
             springBootDataJpa      : "org.springframework.boot:spring-boot-starter-data-jpa:$versions.springBoot",
             springBootValidation   : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
+
+            springCloudOpenFeign   : "org.springframework.cloud:spring-cloud-starter-openfeign:$versions.springCloud",
+
             lombok                 : "org.projectlombok:lombok:$versions.lombok",
             mapStruct              : "org.mapstruct:mapstruct:$versions.mapStruct",
             mapStructProcessor     : "org.mapstruct:mapstruct-processor:$versions.mapStruct",
             swagger                : "org.springdoc:springdoc-openapi-ui:$versions.swagger",
             postgres               : "org.postgresql:postgresql:$versions.postgresql",
-
-
+            jwt                    : "com.auth0:java-jwt:$versions.jwt"
     ]
 }
