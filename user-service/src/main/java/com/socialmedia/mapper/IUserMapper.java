@@ -1,5 +1,6 @@
 package com.socialmedia.mapper;
 
+import com.socialmedia.dto.request.AuthDeleteRequestDto;
 import com.socialmedia.dto.request.AuthUpdateRequestDto;
 import com.socialmedia.dto.request.UserSaveRequestDto;
 import com.socialmedia.entity.UserProfile;
@@ -17,6 +18,9 @@ public interface IUserMapper {
 
     @Mapping(target = "id", source = "authId")
     AuthUpdateRequestDto updateUserToAuthDto(UserProfile userProfile);
+
+    @Mapping(target = "id", source = "authId")
+    AuthDeleteRequestDto deleteUserToAuthDto(UserProfile userProfile);
 
 
 }

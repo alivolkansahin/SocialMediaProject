@@ -1,9 +1,6 @@
 package com.socialmedia.controller;
 
-import com.socialmedia.dto.request.AuthActivateRequestDto;
-import com.socialmedia.dto.request.AuthLoginRequestDto;
-import com.socialmedia.dto.request.AuthRegisterRequestDto;
-import com.socialmedia.dto.request.AuthUpdateRequestDto;
+import com.socialmedia.dto.request.*;
 import com.socialmedia.dto.response.AuthRegisterResponseDto;
 import com.socialmedia.exception.AuthManagerException;
 import com.socialmedia.exception.ErrorType;
@@ -66,6 +63,11 @@ public class AuthController {
     @PutMapping(UPDATE)
     public ResponseEntity<String> updateProfile(@RequestBody @Valid AuthUpdateRequestDto dto){
         return ResponseEntity.ok(authService.updateAuth(dto));
+    }
+
+    @DeleteMapping(DELETE)
+    public ResponseEntity<String> changeStatusToDeleted(@RequestBody AuthDeleteRequestDto dto){
+        return ResponseEntity.ok(authService.changeStatusToDeleted(dto));
     }
 
 

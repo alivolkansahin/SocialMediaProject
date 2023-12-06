@@ -120,6 +120,14 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return "Update successful!";
     }
 
+    public String changeStatusToDeleted(AuthDeleteRequestDto dto) {
+        Optional<Auth> optionalAuth = findById(dto.getId());
+        Auth auth = optionalAuth.orElseThrow(() -> new AuthManagerException(ErrorType.USER_NOT_FOUND_BY_ID));
+        auth.setStatus(EStatus.DELETED);
+        update(auth);
+        return "Delete successful!";
+    }
+
 //    public String activeStatus(AuthActivateRequestDto dto) {
 //        Optional<Auth> optionalAuth = authRepository.findByIdAndActivationCode(dto.getId(), dto.getActivationCode());
 //        if (optionalAuth.isPresent()){

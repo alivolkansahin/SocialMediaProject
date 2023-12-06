@@ -1,8 +1,6 @@
 package com.socialmedia.service;
 
-import com.socialmedia.dto.request.AuthUpdateRequestDto;
-import com.socialmedia.dto.request.UserSaveRequestDto;
-import com.socialmedia.dto.request.UserUpdateRequestDto;
+import com.socialmedia.dto.request.*;
 import com.socialmedia.entity.UserProfile;
 import com.socialmedia.entity.enums.EStatus;
 import com.socialmedia.exception.ErrorType;
@@ -51,8 +49,11 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
 
     public String updateProfile(UserUpdateRequestDto dto) {
         Optional<Long> idFromToken = jwtTokenManager.getIdFromToken(dto.getToken());
+        if(idFromToken.isEmpty()) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+
+
         Optional<UserProfile> optionalUser = userProfileRepository.findByAuthId(idFromToken.get());
-        if(optionalUser.isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN);  // buraları düzenle
+//        if(optionalUser.isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN);  // buraları düzenle
         UserProfile userProfile = optionalUser.orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
 
         if(!userProfile.getEmail().equals(dto.getEmail())){
@@ -66,5 +67,16 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
 
         update(userProfile);
         return "Update successful!";
+    }
+
+    public String deleteProfile(UserDeleteRequestDto dto) {
+        Optional<Long> idFromToken = jwtTokenManager.getIdFromToken(dto.getToken());
+        if(idFromToken.isEmpty()) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        Optional<UserProfile> optionalUser = userProfileRepository.findByAuthId(idFromToken.get());
+        UserProfile userProfile = optionalUser.orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
+        userProfile.setStatus(EStatus.DELETED);
+        update(userProfile);
+        iAuthManager.changeStatusToDeleted(IUserMapper.INSTANCE.deleteUserToAuthDto(userProfile));
+        return "Delete successful!";
     }
 }
