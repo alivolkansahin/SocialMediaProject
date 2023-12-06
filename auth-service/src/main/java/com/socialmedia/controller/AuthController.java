@@ -3,8 +3,8 @@ package com.socialmedia.controller;
 import com.socialmedia.dto.request.AuthActivateRequestDto;
 import com.socialmedia.dto.request.AuthLoginRequestDto;
 import com.socialmedia.dto.request.AuthRegisterRequestDto;
+import com.socialmedia.dto.request.AuthUpdateRequestDto;
 import com.socialmedia.dto.response.AuthRegisterResponseDto;
-import com.socialmedia.entity.Auth;
 import com.socialmedia.exception.AuthManagerException;
 import com.socialmedia.exception.ErrorType;
 import com.socialmedia.service.AuthService;
@@ -61,6 +61,11 @@ public class AuthController {
     @GetMapping("/getrolefromtoken")
     public ResponseEntity<String> getRoleFromToken(String token){
         return ResponseEntity.ok(jwtTokenManager.getRoleFromToken(token).get());
+    }
+
+    @PutMapping(UPDATE)
+    public ResponseEntity<String> updateProfile(@RequestBody @Valid AuthUpdateRequestDto dto){
+        return ResponseEntity.ok(authService.updateAuth(dto));
     }
 
 

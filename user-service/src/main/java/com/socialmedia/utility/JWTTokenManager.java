@@ -3,6 +3,7 @@ package com.socialmedia.utility;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.socialmedia.exception.ErrorType;
 import com.socialmedia.exception.UserManagerException;
@@ -42,8 +43,13 @@ public class JWTTokenManager {
     public Optional<Long> getIdFromToken(String token){
         Algorithm algorithm = Algorithm.HMAC512(secretKey);
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
-        DecodedJWT decodedJWT = verifier.verify(token);
-        if (decodedJWT == null) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        DecodedJWT decodedJWT = null;
+        try {
+            decodedJWT = verifier.verify(token);
+        } catch (JWTVerificationException e) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+//        if (decodedJWT == null) throw new UserManagerException(ErrorType.INVALID_TOKEN);
         Long id = decodedJWT.getClaim("id").asLong(); //claim içindeki valuenun tipini as ile yazıyoruz.
         return Optional.of(id);
     }
@@ -56,8 +62,5 @@ public class JWTTokenManager {
         String role = decodedJWT.getClaim("role").asString(); //claim içindeki valuenun tipini as ile yazıyoruz.
         return Optional.of(role);
     }
-
-
-
 
 }

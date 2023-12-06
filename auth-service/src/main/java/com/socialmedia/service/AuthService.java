@@ -1,9 +1,6 @@
 package com.socialmedia.service;
 
-import com.socialmedia.dto.request.AuthActivateRequestDto;
-import com.socialmedia.dto.request.AuthLoginRequestDto;
-import com.socialmedia.dto.request.AuthRegisterRequestDto;
-import com.socialmedia.dto.request.UserSaveRequestDto;
+import com.socialmedia.dto.request.*;
 import com.socialmedia.dto.response.AuthRegisterResponseDto;
 import com.socialmedia.entity.Auth;
 import com.socialmedia.entity.enums.EStatus;
@@ -63,6 +60,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return token.get();
     }
 
+    @Transactional
     public String activation(AuthActivateRequestDto dto) {
         Optional<Auth> optionalAuth = authRepository.findById(dto.getId());
         if(optionalAuth.isEmpty()) throw new AuthManagerException(ErrorType.USER_NOT_FOUND_LOGIN);  // buraları düzenle
@@ -72,7 +70,8 @@ public class AuthService extends ServiceManager<Auth, Long> {
 //        optionalAuth.get().setStatus(EStatus.ACTIVE);
 //        save(optionalAuth.get());
 //        return "Activation Success!";
-        return statusControl(optionalAuth.get());
+        String status = statusControl(optionalAuth.get());
+        return status;
     }
 
     public String statusControl(Auth auth){
@@ -83,6 +82,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
             case PENDING -> {
                 auth.setStatus(EStatus.ACTIVE);
                 update(auth);
+                iUserProfileManager.activation(auth.getId());
                 return "Activation Success!";
             }
             case BANNED -> {
@@ -109,6 +109,15 @@ public class AuthService extends ServiceManager<Auth, Long> {
         }else {
             throw new AuthManagerException(ErrorType.USER_ALREADY_DELETED);
         }
+    }
+
+    public String updateAuth(AuthUpdateRequestDto dto) {
+        Optional<Auth> optionalAuth = findById(dto.getId());
+        Auth auth = optionalAuth.orElseThrow(() -> new AuthManagerException(ErrorType.USER_NOT_FOUND_BY_ID));
+        if (existsByEmail(dto.getEmail())) throw new AuthManagerException(ErrorType.EMAIL_ALREADY_EXISTS);
+        auth.setEmail(dto.getEmail());
+        update(auth);
+        return "Update successful!";
     }
 
 //    public String activeStatus(AuthActivateRequestDto dto) {

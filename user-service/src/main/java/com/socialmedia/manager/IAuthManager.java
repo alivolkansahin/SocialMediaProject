@@ -1,23 +1,23 @@
 package com.socialmedia.manager;
 
+import com.socialmedia.dto.request.AuthUpdateRequestDto;
 import com.socialmedia.dto.request.UserSaveRequestDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
 import static com.socialmedia.constant.EndPoint.SAVE;
+import static com.socialmedia.constant.EndPoint.UPDATE;
 
-@FeignClient(name = "auth-userprofile", url = "http://localhost:9091/api/v1/user", decode404 = true)
-public interface IUserProfileManager {
+@FeignClient(name = "userprofile-auth", url = "http://localhost:9090/api/v1/auth", decode404 = true)
+public interface IAuthManager {
 
-    @PostMapping(SAVE)
-    ResponseEntity<Boolean> createNewUser(@RequestBody UserSaveRequestDto dto);
-
-    @PostMapping("/activation/{authid}")
-    ResponseEntity<String> activation(@PathVariable Long authid);
+    @PutMapping(UPDATE)
+    ResponseEntity<String> updateProfile(@RequestBody @Valid AuthUpdateRequestDto dto);
 
 }

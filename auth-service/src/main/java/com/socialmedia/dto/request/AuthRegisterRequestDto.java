@@ -10,25 +10,27 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import static com.socialmedia.constant.ErrorStaticMessage.*;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class AuthRegisterRequestDto {
 
-    @NotBlank(message = "Username must not be blank!")
-    @Size(min = 2, max = 20, message = ErrorStaticMessage.USERNAME_NOT_VALID)
+    @NotBlank(message = BLANK_USERNAME)
+    @Size(min = 2, max = 20, message = USERNAME_LENGTH_NOT_VALID)
     private String username;
 
-    @NotBlank(message = "Email must not be blank!")
-    @Email(message = ErrorStaticMessage.EMAIL_NOT_VALID)
+    @NotBlank(message = BLANK_EMAIL)
+    @Email(message = EMAIL_NOT_VALID)
     private String email;
 
-    @NotBlank(message = "Password must not be blank!")
-    @Size(min = 2, max = 20, message = ErrorStaticMessage.PASSWORD_NOT_VALID)
+    @NotBlank(message = BLANK_PASSWORD)
+    @Size(min = 2, max = 20, message = PASSWORD_NOT_VALID)
     private String password;
 
-    @Size(min = 2, max = 20, message = ErrorStaticMessage.PASSWORD_NOT_VALID)
+    @Size(min = 2, max = 20, message = PASSWORD_NOT_VALID)
     private String rePassword;
 
 }

@@ -1,13 +1,13 @@
 package com.socialmedia.controller;
 
 import com.socialmedia.dto.request.UserSaveRequestDto;
+import com.socialmedia.dto.request.UserUpdateRequestDto;
 import com.socialmedia.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static com.socialmedia.constant.EndPoint.*;
 
@@ -21,6 +21,16 @@ public class UserProfileController {
     @PostMapping(SAVE)
     public ResponseEntity<Boolean> createNewUser(@RequestBody UserSaveRequestDto dto){
         return ResponseEntity.ok(userProfileService.createNewUser(dto));
+    }
+
+    @PostMapping("/activation/{authid}")
+    public ResponseEntity<String> activation(@PathVariable Long authid){
+        return ResponseEntity.ok(userProfileService.activation(authid));
+    }
+
+    @PutMapping(UPDATE)
+    public ResponseEntity<String> updateProfile(@RequestBody @Valid UserUpdateRequestDto dto){
+        return ResponseEntity.ok(userProfileService.updateProfile(dto));
     }
 
 }

@@ -27,4 +27,5 @@ public interface IAuthMapper {
     @Mapping(target = "authId", source = "id")
     UserSaveRequestDto registerAuthToUserDto(Auth auth);
 
+
 }
