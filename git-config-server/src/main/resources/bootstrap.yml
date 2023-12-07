@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: config-server-git
+  profiles:
+    active: development # gitten çekiyorken development olmalı, localde çalışıyorsam native yazmam lazım (configserver modulünün application.yml'ında native yapmıştık)

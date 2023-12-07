@@ -14,6 +14,9 @@ ext{
             springBootValidation   : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
 
             springCloudOpenFeign   : "org.springframework.cloud:spring-cloud-starter-openfeign:$versions.springCloud",
+            springCloudConfigServer     : "org.springframework.cloud:spring-cloud-config-server:$versions.springCloud",
+            springCloudStarterConfig    : "org.springframework.cloud:spring-cloud-starter-config:$versions.springCloud",
+            springCloudConfigClient     : "org.springframework.cloud:spring-cloud-config-client:$versions.springCloud",
 
             lombok                 : "org.projectlombok:lombok:$versions.lombok",
             mapStruct              : "org.mapstruct:mapstruct:$versions.mapStruct",
