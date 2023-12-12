@@ -7,6 +7,7 @@ import com.socialmedia.exception.ErrorType;
 import com.socialmedia.exception.UserManagerException;
 import com.socialmedia.manager.IAuthManager;
 import com.socialmedia.mapper.IUserMapper;
+import com.socialmedia.rabbitmq.model.RegisterModel;
 import com.socialmedia.repository.UserProfileRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
@@ -79,4 +80,18 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
         iAuthManager.changeStatusToDeleted(IUserMapper.INSTANCE.deleteUserToAuthDto(userProfile));
         return "Delete successful!";
     }
+
+    public Long getUserIdByToken(String token) {
+        Optional<Long> idFromToken = jwtTokenManager.getIdFromToken(token);
+        if(idFromToken.isEmpty()) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        Optional<UserProfile> optionalUser = userProfileRepository.findByAuthId(idFromToken.get());
+        UserProfile userProfile = optionalUser.orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
+        return userProfile.getId();
+    }
+
+    public void createNewUserWithRabbit(RegisterModel registerModel) {
+        UserProfile userProfile = IUserMapper.INSTANCE.saveModelToUser(registerModel);
+        save(userProfile);
+    }
+
 }

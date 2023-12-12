@@ -2,6 +2,7 @@ package com.socialmedia.controller;
 
 import com.socialmedia.dto.request.*;
 import com.socialmedia.dto.response.AuthRegisterResponseDto;
+import com.socialmedia.entity.Auth;
 import com.socialmedia.exception.AuthManagerException;
 import com.socialmedia.exception.ErrorType;
 import com.socialmedia.service.AuthService;
@@ -11,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.socialmedia.constant.EndPoint.*;
 
@@ -29,6 +32,12 @@ public class AuthController {
             throw new AuthManagerException(ErrorType.PASSWORD_MISMATCH);
         return ResponseEntity.ok(authService.register(dto));
     }
+    @PostMapping(REGISTER + "Rabbit")
+    public ResponseEntity<AuthRegisterResponseDto> registerRabbit(@RequestBody @Valid AuthRegisterRequestDto dto){
+        if(!dto.getPassword().equals(dto.getRePassword()))
+            throw new AuthManagerException(ErrorType.PASSWORD_MISMATCH);
+        return ResponseEntity.ok(authService.register(dto));
+    }
 
     @PostMapping(LOGIN)
     public ResponseEntity<String> login(@RequestBody @Valid AuthLoginRequestDto dto){
@@ -37,6 +46,11 @@ public class AuthController {
 
     @PostMapping("/activation")
     public ResponseEntity<String> activation(@RequestBody @Valid AuthActivateRequestDto dto){
+        return ResponseEntity.ok(authService.activation(dto));
+    }
+
+    @PostMapping("/activationRabbit")
+    public ResponseEntity<String> activationRabbit(@RequestBody @Valid AuthActivateRequestDto dto){
         return ResponseEntity.ok(authService.activation(dto));
     }
 
@@ -68,6 +82,11 @@ public class AuthController {
     @DeleteMapping(DELETE)
     public ResponseEntity<String> changeStatusToDeleted(@RequestBody AuthDeleteRequestDto dto){
         return ResponseEntity.ok(authService.changeStatusToDeleted(dto));
+    }
+
+    @GetMapping(FINDALL)
+    public ResponseEntity<List<Auth>> findAll(){
+        return ResponseEntity.ok(authService.findAll());
     }
 
 

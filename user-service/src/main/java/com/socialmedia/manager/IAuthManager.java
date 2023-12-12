@@ -20,4 +20,7 @@ public interface IAuthManager {
     @DeleteMapping(DELETE)
     ResponseEntity<String> changeStatusToDeleted(@RequestBody AuthDeleteRequestDto dto);
 
+    @PostMapping(SAVE)
+    ResponseEntity<String> deneme(@RequestBody ResponseEntity<AuthUpdateRequestDto> dtoResponse);
+
 }

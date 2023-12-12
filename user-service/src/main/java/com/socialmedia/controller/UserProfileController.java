@@ -3,12 +3,15 @@ package com.socialmedia.controller;
 import com.socialmedia.dto.request.UserDeleteRequestDto;
 import com.socialmedia.dto.request.UserSaveRequestDto;
 import com.socialmedia.dto.request.UserUpdateRequestDto;
+import com.socialmedia.entity.UserProfile;
 import com.socialmedia.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static com.socialmedia.constant.EndPoint.*;
 
@@ -24,10 +27,10 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.createNewUser(dto));
     }
 
-    @PostMapping("/activation/{authid}")
-    public ResponseEntity<String> activation(@PathVariable Long authid){
-        return ResponseEntity.ok(userProfileService.activation(authid));
-    }
+//    @PostMapping("/activation/{authid}")    // rabbitmq ile asenkron bağladık
+//    public ResponseEntity<String> activation(@PathVariable Long authid){
+//        return ResponseEntity.ok(userProfileService.activation(authid));
+//    }
 
     @PutMapping(UPDATE)
     public ResponseEntity<String> updateProfile(@RequestBody @Valid UserUpdateRequestDto dto){
@@ -37,6 +40,16 @@ public class UserProfileController {
     @DeleteMapping(DELETE)
     public ResponseEntity<String> deleteProfile(@RequestBody UserDeleteRequestDto dto){
         return ResponseEntity.ok(userProfileService.deleteProfile(dto));
+    }
+
+    @GetMapping("/getuseridfromtoken")
+    public Long getUserIdByToken(@RequestParam String token){
+        return userProfileService.getUserIdByToken(token);
+    }
+
+    @GetMapping(FINDALL)
+    public ResponseEntity<List<UserProfile>> findall(){ // requestparam daha çok filtreleme işllemleri için
+        return ResponseEntity.ok(userProfileService.findAll());
     }
 
 }

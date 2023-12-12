@@ -8,6 +8,8 @@ import com.socialmedia.exception.AuthManagerException;
 import com.socialmedia.exception.ErrorType;
 import com.socialmedia.manager.IUserProfileManager;
 import com.socialmedia.mapper.IAuthMapper;
+import com.socialmedia.rabbitmq.producer.ActivationProducer;
+import com.socialmedia.rabbitmq.producer.RegisterProducer;
 import com.socialmedia.repository.AuthRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
@@ -25,20 +27,27 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     private final IUserProfileManager iUserProfileManager;
 
-    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager) {
+    private final RegisterProducer registerProducer;
+
+    private final ActivationProducer activationProducer;
+
+    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager, RegisterProducer registerProducer, ActivationProducer activationProducer) {
         super(authRepository);
         this.authRepository = authRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.iUserProfileManager = iUserProfileManager;
+        this.registerProducer = registerProducer;
+        this.activationProducer = activationProducer;
     }
 
-    @Transactional
+//    @Transactional    // RabbitMQ ile buna gerek kalmadı, rabbitmq ile zaten asenkron haberleşmelerini sağladığımız için, diğer tarafın açık kapalı olması farketmez benim için.
     public AuthRegisterResponseDto register(AuthRegisterRequestDto dto) {
         if(existsByEmail(dto.getEmail())) throw new AuthManagerException(ErrorType.EMAIL_ALREADY_EXISTS);
         if(existsByUsername(dto.getUsername())) throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXISTS);
         Auth auth = IAuthMapper.INSTANCE.registerDtoToAuth(dto);
         save(auth);
-        iUserProfileManager.createNewUser(IAuthMapper.INSTANCE.registerAuthToUserDto(auth));
+//        iUserProfileManager.createNewUser(IAuthMapper.INSTANCE.registerAuthToUserDto(auth));
+        registerProducer.sendNewUser(IAuthMapper.INSTANCE.registerAuthToModel(auth));
         return IAuthMapper.INSTANCE.registerAuthToDto(auth);
     }
 
@@ -82,7 +91,8 @@ public class AuthService extends ServiceManager<Auth, Long> {
             case PENDING -> {
                 auth.setStatus(EStatus.ACTIVE);
                 update(auth);
-                iUserProfileManager.activation(auth.getId());
+//                iUserProfileManager.activation(auth.getId());
+                activationProducer.convertAndSendToRabbit(auth.getId());
                 return "Activation Success!";
             }
             case BANNED -> {

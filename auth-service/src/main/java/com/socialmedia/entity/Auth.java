@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Data
 @Entity
 @Builder
-@Table(name = "tblauth")
+@Table(name = "tblauths")
 public class Auth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

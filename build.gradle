@@ -56,6 +56,9 @@ allprojects {
         implementation libs.springCloudOpenFeign
 
         implementation libs.springCloudConfigClient
+
+        implementation libs.springCloudSleuth   // 12.11.2023 Monday
+        implementation libs.springCloudSleuthZipkin
     }
 }
 
