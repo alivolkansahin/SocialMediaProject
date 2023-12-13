@@ -18,38 +18,24 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.auth-exchange}")
     private String exchange;
 
-    @Value("${rabbitmq.register-queue}")
-    private String registerQueueName;
+    @Value("${rabbitmq.mail-queue}")
+    private String mailQueueName;
 
-    @Value("${rabbitmq.activation-queue}")
-    private String activationQueueName;
-
-    @Value("${rabbitmq.register-bindingKey}")
-    private String registerBindingKey;
-
-    @Value("${rabbitmq.activation-bindingKey}")
-    private String activationBindingKey;
+    @Value("${rabbitmq.mail-bindingKey}")
+    private String mailBindingKey;
 
     @Bean
     DirectExchange exchangeAuth(){
         return new DirectExchange(exchange);
     }
     @Bean
-    Queue registerQueue(){
-        return new Queue(registerQueueName);
-    }
-    @Bean
-    Queue activationQueue(){
-        return new Queue(activationQueueName);
-    }
-    @Bean
-    public Binding bindingRegister(Queue registerQueue, DirectExchange exchangeAuth){
-        return BindingBuilder.bind(registerQueue).to(exchangeAuth).with(registerBindingKey);
+    Queue mailQueue(){
+        return new Queue(mailQueueName);
     }
 
     @Bean
-    public Binding bindingActivation(Queue activationQueue, DirectExchange exchangeAuth){
-        return BindingBuilder.bind(activationQueue).to(exchangeAuth).with(activationBindingKey);
+    public Binding bindingMail(Queue mailQueue, DirectExchange exchangeAuth){
+        return BindingBuilder.bind(mailQueue).to(exchangeAuth).with(mailBindingKey);
     }
 
     @Bean

@@ -11,12 +11,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 @Builder
-public class RegisterModel {
-
-    private Long authId;
-
-    private String username;
+public class MailModel {
 
     private String email;
+
+    private String activationCode;
 
 }

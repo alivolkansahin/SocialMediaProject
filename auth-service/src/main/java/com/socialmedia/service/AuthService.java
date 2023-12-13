@@ -9,6 +9,7 @@ import com.socialmedia.exception.ErrorType;
 import com.socialmedia.manager.IUserProfileManager;
 import com.socialmedia.mapper.IAuthMapper;
 import com.socialmedia.rabbitmq.producer.ActivationProducer;
+import com.socialmedia.rabbitmq.producer.MailProducer;
 import com.socialmedia.rabbitmq.producer.RegisterProducer;
 import com.socialmedia.repository.AuthRepository;
 import com.socialmedia.utility.JWTTokenManager;
@@ -30,14 +31,16 @@ public class AuthService extends ServiceManager<Auth, Long> {
     private final RegisterProducer registerProducer;
 
     private final ActivationProducer activationProducer;
+    private final MailProducer mailProducer;
 
-    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager, RegisterProducer registerProducer, ActivationProducer activationProducer) {
+    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer) {
         super(authRepository);
         this.authRepository = authRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.iUserProfileManager = iUserProfileManager;
         this.registerProducer = registerProducer;
         this.activationProducer = activationProducer;
+        this.mailProducer = mailProducer;
     }
 
 //    @Transactional    // RabbitMQ ile buna gerek kalmadı, rabbitmq ile zaten asenkron haberleşmelerini sağladığımız için, diğer tarafın açık kapalı olması farketmez benim için.
@@ -48,6 +51,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         save(auth);
 //        iUserProfileManager.createNewUser(IAuthMapper.INSTANCE.registerAuthToUserDto(auth));
         registerProducer.sendNewUser(IAuthMapper.INSTANCE.registerAuthToModel(auth));
+        mailProducer.sendActivationMail(IAuthMapper.INSTANCE.mailAuthToModel(auth));
         return IAuthMapper.INSTANCE.registerAuthToDto(auth);
     }
 

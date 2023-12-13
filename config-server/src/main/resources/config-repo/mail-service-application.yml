@@ -1,8 +1,8 @@
 server:
-  port: 9090
+  port: 9093
 
 spring:
-  rabbitmq: # rabbitmq 12 aralık salı
+  rabbitmq:
     host: localhost
     port: 5672
     username: user
@@ -11,21 +11,19 @@ spring:
     enabled: true
     base-url: http://localhost:9411
     service:
-      name: auth-service
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: 1234
-    url: jdbc:postgresql://localhost:5432/SocialMedia_AuthDb
+      name: mail-service
+  mail: # mail 13 aralık çarşamba
+    host: smtp.gmail.com
+    port: 587
+    username: avolkan.shn@gmail.com
+    password: hvpn djwp ugvl uvzd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-
-jwt:
-  secretKey: ${Java12_SocialMediaProject_SecretKey}
-  issuer: ${Java12_SocialMediaProject_Issuer}
 rabbitmq:
   auth-exchange: authExchange
   register-queue: registerQueue
