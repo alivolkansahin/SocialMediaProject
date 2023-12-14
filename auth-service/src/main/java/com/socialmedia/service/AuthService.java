@@ -14,8 +14,9 @@ import com.socialmedia.rabbitmq.producer.RegisterProducer;
 import com.socialmedia.repository.AuthRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,7 +34,9 @@ public class AuthService extends ServiceManager<Auth, Long> {
     private final ActivationProducer activationProducer;
     private final MailProducer mailProducer;
 
-    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer) {
+    private final CacheManager cacheManager;
+
+    public AuthService(AuthRepository authRepository, JWTTokenManager jwtTokenManager, IUserProfileManager iUserProfileManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer, CacheManager cacheManager) {
         super(authRepository);
         this.authRepository = authRepository;
         this.jwtTokenManager = jwtTokenManager;
@@ -41,6 +44,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         this.registerProducer = registerProducer;
         this.activationProducer = activationProducer;
         this.mailProducer = mailProducer;
+        this.cacheManager = cacheManager;
     }
 
 //    @Transactional    // RabbitMQ ile buna gerek kalmadı, rabbitmq ile zaten asenkron haberleşmelerini sağladığımız için, diğer tarafın açık kapalı olması farketmez benim için.
@@ -73,7 +77,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return token.get();
     }
 
-    @Transactional
+    @CacheEvict(cacheNames = "findbystatus", allEntries = true)
     public String activation(AuthActivateRequestDto dto) {
         Optional<Auth> optionalAuth = authRepository.findById(dto.getId());
         if(optionalAuth.isEmpty()) throw new AuthManagerException(ErrorType.USER_NOT_FOUND_LOGIN);  // buraları düzenle
@@ -83,8 +87,8 @@ public class AuthService extends ServiceManager<Auth, Long> {
 //        optionalAuth.get().setStatus(EStatus.ACTIVE);
 //        save(optionalAuth.get());
 //        return "Activation Success!";
-        String status = statusControl(optionalAuth.get());
-        return status;
+        //anatasyon olmasaydı : cacheManager.getCache("findbystatus").evict(optionalAuth.get().getStatus());
+        return statusControl(optionalAuth.get());
     }
 
     public String statusControl(Auth auth){

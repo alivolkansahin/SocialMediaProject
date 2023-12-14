@@ -22,7 +22,8 @@ public enum ErrorType { //errorlerimi tanımlayım, benim kullanacağım
     USER_ALREADY_ACTIVE(5010, "Activation already completed!", HttpStatus.BAD_REQUEST),
     USER_BANNED(5011, "This user is banned!", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(6000, "Invalid token!", HttpStatus.BAD_REQUEST),
-    TOKEN_NOT_CREATED(6001,"Token not created!", HttpStatus.BAD_REQUEST);
+    TOKEN_NOT_CREATED(6001,"Token not created!", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND_BY_STATUS(5009, "User not found by this status!", HttpStatus.NOT_FOUND);  // console ekranında ACTIVE ASTIVE yapıp yolladığımızda direkt böyle yakalattık
 /*
     NO_POSTS_EXIST(5101, "No posts exist in database!", HttpStatus.NOT_FOUND), // 404
     POST_NOT_FOUND_BY_ID(5102, "No post found by this id!", HttpStatus.NOT_FOUND), // 404

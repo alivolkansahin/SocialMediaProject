@@ -11,8 +11,10 @@ import com.socialmedia.rabbitmq.model.RegisterModel;
 import com.socialmedia.repository.UserProfileRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -94,4 +96,20 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
         save(userProfile);
     }
 
+    @Cacheable(value = "findbyusernameredis" , key = "#username.toLowerCase()") //cache'e küçük username yazdırıyoruz
+    public UserProfile findByUsername(String username) {
+//        try {   // DAHA İYİ GÖREBİLMEK İÇİN EKLEYEBİLİRSİN
+//            Thread.sleep(1000L);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
+        return userProfileRepository.findByUsername(username.toLowerCase()).orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
+    }
+
+    @Cacheable(value = "findbystatus")
+    public List<UserProfile> findByStatus(EStatus status) {
+        List<UserProfile> userList = userProfileRepository.findByStatus(status);
+//        if (userList.isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND_BY_STATUS);  // boşsa hata fırlatmayalım diye söyledi hoca...
+        return userList;
+    }
 }

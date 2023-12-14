@@ -36,6 +36,17 @@ public class GlobalExceptionHandler {
 //        return new ResponseEntity<>(createError(ex, 5501, customizedMessage), httpStatus);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> handleManagerException(IllegalArgumentException ex) {  // console ekranında ACTIVE ASTIVE yapıp yolladığımızda direkt böyle yakalattık, olmadan önce üstteki yakalıyordu MethodArgumentNotValidException
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        ErrorType errorType = ErrorType.INVALID_STATUS;
+        ErrorMessage errorMessage = createError(errorType,ex);
+        errorMessage.setMessage(errorType.getMessage());
+        return new ResponseEntity<>(errorMessage, httpStatus);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class) //5601    // Entity sınıfındaki hazır kütüphane annotationları ve custom annotationların hataları yakalanıyor.
     @ResponseBody
     public ResponseEntity<ErrorMessage> handleValidationException(ConstraintViolationException ex){

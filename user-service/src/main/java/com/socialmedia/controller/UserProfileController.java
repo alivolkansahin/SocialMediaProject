@@ -4,8 +4,10 @@ import com.socialmedia.dto.request.UserDeleteRequestDto;
 import com.socialmedia.dto.request.UserSaveRequestDto;
 import com.socialmedia.dto.request.UserUpdateRequestDto;
 import com.socialmedia.entity.UserProfile;
+import com.socialmedia.entity.enums.EStatus;
 import com.socialmedia.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,17 @@ public class UserProfileController {
     @GetMapping(FINDALL)
     public ResponseEntity<List<UserProfile>> findall(){ // requestparam daha çok filtreleme işllemleri için
         return ResponseEntity.ok(userProfileService.findAll());
+    }
+
+
+    @GetMapping(FINDBYNAME + "/{username}")
+    public ResponseEntity<UserProfile> findByUsername(@PathVariable String username){     //findbyusername methodu yazalım username değerine göre bize userpofile dönsün cache atalım
+        return ResponseEntity.ok(userProfileService.findByUsername(username));
+    }
+
+    @GetMapping("/findbystatus")
+    public ResponseEntity<List<UserProfile>> findByStatus(@RequestParam EStatus status){     //findbystatus
+        return ResponseEntity.ok(userProfileService.findByStatus(status));
     }
 
 }

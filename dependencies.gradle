@@ -15,6 +15,7 @@ ext{
             springBootValidation   : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
             springBootAmqp         : "org.springframework.boot:spring-boot-starter-amqp:$versions.springBoot",   // 12.12.2023 Tuesday (iletişim için aracı bi katman olması için rabbitmq ile kullanacağımız kütüphane)
             springBootMailSender   : "org.springframework.boot:spring-boot-starter-mail:$versions.springBoot",   // 13.12.2023 Wednesday (Spring Boot Starter Mail kütüphanesini ekledik)
+            springBootDataRedis    : "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot", // 14.12.2023 Thursday (Redis)
 
 
             springCloudOpenFeign             : "org.springframework.cloud:spring-cloud-starter-openfeign:$versions.springCloud",

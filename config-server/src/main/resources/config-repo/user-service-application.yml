@@ -20,8 +20,15 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
+
+  cache: # 14 Aralık Perşembe Redis
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secretKey: ${Java12_SocialMediaProject_SecretKey}
@@ -32,3 +39,7 @@ rabbitmq:
   activation-queue: activationQueue
   register-bindingKey: registerBindingKey
   activation-bindingKey: activationBindingKey
+
+#redis:  # configurasyon sınıfı kullanacaksan bunu açmalısın @value için
+#  host: localhost
+#  port: 6379

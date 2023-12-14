@@ -57,8 +57,10 @@ allprojects {
 
         implementation libs.springCloudConfigClient
 
-        implementation libs.springCloudSleuth   // 12.11.2023 Monday
+        implementation libs.springCloudSleuth   // 11.12.2023 Monday
         implementation libs.springCloudSleuthZipkin
+
+        implementation libs.springBootDataRedis // 14.12.2023 Thursday
     }
 }
 

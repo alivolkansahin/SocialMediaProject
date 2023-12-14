@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Builder
 @Table(name = "tbluserprofiles")
-public class UserProfile {
+public class UserProfile implements Serializable { // redis için ekledik.
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
