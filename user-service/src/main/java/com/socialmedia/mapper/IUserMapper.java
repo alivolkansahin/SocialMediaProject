@@ -3,7 +3,9 @@ package com.socialmedia.mapper;
 import com.socialmedia.dto.request.AuthDeleteRequestDto;
 import com.socialmedia.dto.request.AuthUpdateRequestDto;
 import com.socialmedia.dto.request.UserSaveRequestDto;
+import com.socialmedia.dto.response.UserProfileResponseDto;
 import com.socialmedia.entity.UserProfile;
+import com.socialmedia.rabbitmq.model.RegisterElasticModel;
 import com.socialmedia.rabbitmq.model.RegisterModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -24,5 +26,11 @@ public interface IUserMapper {
     AuthDeleteRequestDto deleteUserToAuthDto(UserProfile userProfile);
 
     UserProfile saveModelToUser(RegisterModel registerModel);
+
+    @Mapping(target = "userProfileId", source = "id")
+    UserProfileResponseDto toUserProfileResponseDto(UserProfile userProfile);
+
+    @Mapping(target = "userProfileId", source = "id")
+    RegisterElasticModel UserProfileToModel(UserProfile userProfile);
 
 }

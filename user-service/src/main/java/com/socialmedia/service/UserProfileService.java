@@ -1,13 +1,16 @@
 package com.socialmedia.service;
 
 import com.socialmedia.dto.request.*;
+import com.socialmedia.dto.response.UserProfileResponseDto;
 import com.socialmedia.entity.UserProfile;
 import com.socialmedia.entity.enums.EStatus;
 import com.socialmedia.exception.ErrorType;
 import com.socialmedia.exception.UserManagerException;
 import com.socialmedia.manager.IAuthManager;
 import com.socialmedia.mapper.IUserMapper;
+import com.socialmedia.rabbitmq.model.RegisterElasticModel;
 import com.socialmedia.rabbitmq.model.RegisterModel;
+import com.socialmedia.rabbitmq.producer.RegisterElasticProducer;
 import com.socialmedia.repository.UserProfileRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
@@ -26,11 +29,14 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
 
     private final IAuthManager iAuthManager;
 
-    public UserProfileService(UserProfileRepository userProfileRepository, JWTTokenManager jwtTokenManager, IAuthManager iAuthManager) {
+    private final RegisterElasticProducer registerElasticProducer;
+
+    public UserProfileService(UserProfileRepository userProfileRepository, JWTTokenManager jwtTokenManager, IAuthManager iAuthManager, RegisterElasticProducer registerElasticProducer) {
         super(userProfileRepository);
         this.userProfileRepository = userProfileRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.iAuthManager = iAuthManager;
+        this.registerElasticProducer = registerElasticProducer;
     }
 
     public Boolean createNewUser(UserSaveRequestDto dto) {
@@ -94,6 +100,7 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
     public void createNewUserWithRabbit(RegisterModel registerModel) {
         UserProfile userProfile = IUserMapper.INSTANCE.saveModelToUser(registerModel);
         save(userProfile);
+        registerElasticProducer.sendNewUser(IUserMapper.INSTANCE.UserProfileToModel(userProfile));
     }
 
     @Cacheable(value = "findbyusernameredis" , key = "#username.toLowerCase()") //cache'e küçük username yazdırıyoruz
@@ -111,5 +118,9 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
         List<UserProfile> userList = userProfileRepository.findByStatus(status);
 //        if (userList.isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND_BY_STATUS);  // boşsa hata fırlatmayalım diye söyledi hoca...
         return userList;
+    }
+
+    public List<UserProfileResponseDto> findAllForElasticService(){
+        return userProfileRepository.findAll().stream().map(userProfile -> IUserMapper.INSTANCE.toUserProfileResponseDto(userProfile)).toList();
     }
 }

@@ -24,11 +24,18 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.activation-queue}")
     private String activationQueueName;
 
+    @Value("${rabbitmq.registerElastic-queue}")
+    private String registerElasticQueueName;
+
     @Value("${rabbitmq.register-bindingKey}")
     private String registerBindingKey;
 
     @Value("${rabbitmq.activation-bindingKey}")
     private String activationBindingKey;
+
+    @Value("${rabbitmq.registerElastic-bindingKey}")
+    private String registerElasticBindingKey;
+
 
     @Bean
     DirectExchange exchangeAuth(){
@@ -43,6 +50,10 @@ public class RabbitMqConfig {
         return new Queue(activationQueueName);
     }
     @Bean
+    Queue registerElasticQueue(){
+        return new Queue(registerElasticQueueName);
+    }
+    @Bean
     public Binding bindingRegister(Queue registerQueue, DirectExchange exchangeAuth){
         return BindingBuilder.bind(registerQueue).to(exchangeAuth).with(registerBindingKey);
     }
@@ -50,6 +61,11 @@ public class RabbitMqConfig {
     @Bean
     public Binding bindingActivation(Queue activationQueue, DirectExchange exchangeAuth){
         return BindingBuilder.bind(activationQueue).to(exchangeAuth).with(activationBindingKey);
+    }
+
+    @Bean
+    public Binding bindingRegisterElastic(Queue registerElasticQueue, DirectExchange exchangeAuth){
+        return BindingBuilder.bind(registerElasticQueue).to(exchangeAuth).with(registerElasticBindingKey);
     }
 
     @Bean

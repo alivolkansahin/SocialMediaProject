@@ -6,4 +6,5 @@ include 'user-service'
 include 'post-service'
 include 'api-gateway-service'
 include 'mail-service'
+include 'elastic-service'
 

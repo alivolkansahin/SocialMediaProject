@@ -38,9 +38,11 @@ rabbitmq:
   register-queue: registerQueue
   activation-queue: activationQueue
   mail-queue: mailQueue
+  registerElastic-queue: registerElasticQueue
   register-bindingKey: registerBindingKey
   activation-bindingKey: activationBindingKey
   mail-bindingKey: mailBindingKey
+  registerElastic-bindingKey: registerElasticBindingKey
 
 #redis:  # configurasyon sınıfı kullanacaksan bunu açmalısın @value için
 #  host: localhost
