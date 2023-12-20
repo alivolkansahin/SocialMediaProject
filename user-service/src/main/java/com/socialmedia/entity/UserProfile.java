@@ -5,21 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
 @Builder
-@Table(name = "tbluserprofiles")
+@Document
 public class UserProfile implements Serializable { // redis için ekledik.
 
+//    @MongoId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private Long authId;
 
@@ -36,7 +36,6 @@ public class UserProfile implements Serializable { // redis için ekledik.
     private String about;
 
     @Builder.Default
-    @Enumerated(EnumType.STRING)
     private EStatus status = EStatus.PENDING;
 
 }

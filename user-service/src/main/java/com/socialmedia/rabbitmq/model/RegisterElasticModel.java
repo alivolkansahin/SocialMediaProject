@@ -6,16 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class RegisterElasticModel {
 
-    private Long userProfileId;
+//    private Long userProfileId; // before mongodb
+    private String id;
 
     private Long authId;
 

@@ -27,10 +27,10 @@ public interface IUserMapper {
 
     UserProfile saveModelToUser(RegisterModel registerModel);
 
-    @Mapping(target = "userProfileId", source = "id")
+//    @Mapping(target = "userProfileId", source = "id")   // before mongoDb
     UserProfileResponseDto toUserProfileResponseDto(UserProfile userProfile);
 
-    @Mapping(target = "userProfileId", source = "id")
+//    @Mapping(target = "userProfileId", source = "id")   // before mongoDb
     RegisterElasticModel UserProfileToModel(UserProfile userProfile);
 
 }

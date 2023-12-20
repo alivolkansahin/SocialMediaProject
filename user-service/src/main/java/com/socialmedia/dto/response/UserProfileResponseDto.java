@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserProfileResponseDto {
 
-    private Long userProfileId;
+//    private Long userProfileId;  // before mongoDb
+    private String id;
 
     private Long authId;
 

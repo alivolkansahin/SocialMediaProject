@@ -18,7 +18,7 @@ public class UserProfile {
     @Id
     private String id;
 
-    private Long userProfileId;
+//    private Long userProfileId;   // mongodb ekleyince zaten bizim eski kurgudaki id değeri ile userprofileid değeri aynı olucak diye gizledik
 
     private Long authId;
 

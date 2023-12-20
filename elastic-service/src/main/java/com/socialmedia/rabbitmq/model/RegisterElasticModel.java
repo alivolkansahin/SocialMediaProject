@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegisterElasticModel {
 
-    private Long userProfileId;
+//    private Long userProfileId; // before mongodb
+    private String id;
 
     private Long authId;
 

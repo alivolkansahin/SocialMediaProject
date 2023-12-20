@@ -15,13 +15,15 @@ import com.socialmedia.repository.UserProfileRepository;
 import com.socialmedia.utility.JWTTokenManager;
 import com.socialmedia.utility.ServiceManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserProfileService extends ServiceManager<UserProfile, Long> {
+public class UserProfileService extends ServiceManager<UserProfile, String> {
 
     private final UserProfileRepository userProfileRepository;
 
@@ -89,13 +91,13 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
         return "Delete successful!";
     }
 
-    public Long getUserIdByToken(String token) {
-        Optional<Long> idFromToken = jwtTokenManager.getIdFromToken(token);
-        if(idFromToken.isEmpty()) throw new UserManagerException(ErrorType.INVALID_TOKEN);
-        Optional<UserProfile> optionalUser = userProfileRepository.findByAuthId(idFromToken.get());
-        UserProfile userProfile = optionalUser.orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
-        return userProfile.getId();
-    }
+//    public Long getUserIdByToken(String token) {
+//        Optional<Long> idFromToken = jwtTokenManager.getIdFromToken(token);
+//        if(idFromToken.isEmpty()) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+//        Optional<UserProfile> optionalUser = userProfileRepository.findByAuthId(idFromToken.get());
+//        UserProfile userProfile = optionalUser.orElseThrow(() -> new UserManagerException(ErrorType.USER_NOT_FOUND_LOGIN));
+//        return userProfile.getId();
+//    }
 
     public void createNewUserWithRabbit(RegisterModel registerModel) {
         UserProfile userProfile = IUserMapper.INSTANCE.saveModelToUser(registerModel);
@@ -122,5 +124,19 @@ public class UserProfileService extends ServiceManager<UserProfile, Long> {
 
     public List<UserProfileResponseDto> findAllForElasticService(){
         return userProfileRepository.findAll().stream().map(userProfile -> IUserMapper.INSTANCE.toUserProfileResponseDto(userProfile)).toList();
+    }
+
+    // bu aşağı indikçe otomatik yeni elemanların gelmesi (ürün ararken mesela) mevzusunu methodlaştırmaya çalışıyoruz.
+    // ASC DESC
+    public Page<UserProfile> findAllByPageable(int pageSize, int pageNumber, String direction, String sortParameter) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortParameter); // pageSize: kaç eleman, pageNumber: Kaçıncı sayfa, direction: ASC or DESC, sortParameter: idye göre mi username e göre mi
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return userProfileRepository.findAll(pageable);
+    }
+
+    public Slice<UserProfile> findAllBySlice(int pageSize, int pageNumber, String direction, String sortParameter) { // sadece geri dönüş tipi değişti
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortParameter); // pageSize: kaç eleman, pageNumber: Kaçıncı sayfa, direction: ASC or DESC, sortParameter: idye göre mi username e göre mi
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return userProfileRepository.findAll(pageable);
     }
 }

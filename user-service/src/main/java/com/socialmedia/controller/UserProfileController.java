@@ -9,6 +9,8 @@ import com.socialmedia.entity.enums.EStatus;
 import com.socialmedia.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,10 +47,10 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileService.deleteProfile(dto));
     }
 
-    @GetMapping("/getuseridfromtoken")
-    public Long getUserIdByToken(@RequestParam String token){
-        return userProfileService.getUserIdByToken(token);
-    }
+//    @GetMapping("/getuseridfromtoken")
+//    public Long getUserIdByToken(@RequestParam String token){
+//        return userProfileService.getUserIdByToken(token);
+//    }
 
     @GetMapping(FINDALL)
     public ResponseEntity<List<UserProfile>> findall(){ // requestparam daha çok filtreleme işllemleri için
@@ -70,5 +72,17 @@ public class UserProfileController {
     public ResponseEntity<List<UserProfileResponseDto>> findAllForElasticService(){
         return ResponseEntity.ok(userProfileService.findAllForElasticService());
     }
+
+    @GetMapping("/findallbypageable")
+    public ResponseEntity<Page<UserProfile>> findAllByPageable(int pageSize, int pageNumber, @RequestParam(required = false, defaultValue = "ASC") String direction, @RequestParam(required = false, defaultValue = "id") String sortParameter){
+        return ResponseEntity.ok(userProfileService.findAllByPageable(pageSize, pageNumber, direction, sortParameter));
+    }
+
+    @GetMapping("/findallbyslice") // pageable ile mantık aynı sadece geri dönüş tipi değişiyor serviste, aynı zamanda bakarsan public interface Page<T> extends Slice<T>  ^^
+    public ResponseEntity<Slice<UserProfile>> findAllBySlice(int pageSize, int pageNumber, @RequestParam(required = false, defaultValue = "ASC") String direction, @RequestParam(required = false, defaultValue = "id") String sortParameter){
+        return ResponseEntity.ok(userProfileService.findAllBySlice(pageSize, pageNumber, direction, sortParameter));
+    }
+
+    //axios.get("http://localhost/9091/user/findalbyslice").setParameter(setLabel(pageSize),setPageNumber(pageNumber))  -->  frontend kısmında böyle şeyler olacak.
 
 }
