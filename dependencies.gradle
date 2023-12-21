@@ -17,7 +17,8 @@ ext{
             springBootMailSender   : "org.springframework.boot:spring-boot-starter-mail:$versions.springBoot",   // 13.12.2023 Wednesday (Spring Boot Starter Mail kütüphanesini ekledik)
             springBootDataRedis    : "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot", // 14.12.2023 Thursday (Redis)
             springBootElasticSearch: "org.springframework.boot:spring-boot-starter-data-elasticsearch:$versions.springBoot", // 18.12.2023 Monday (ElasticSearch - milyonlarca veri varsa (bigdata) arama işlemlerini çok hızlı gerçekleştiren Document based NoSQL teknolojisi!)
-            springBootDataMongoDB  : "org.springframework.boot:spring-boot-starter-data-mongodb:$versions.springBoot", // 20.12.203 Wednesday- userı mongoya taşıyacağız.
+            springBootDataMongoDB  : "org.springframework.boot:spring-boot-starter-data-mongodb:$versions.springBoot", // 20.12.2023 Wednesday- userı mongoya taşıyacağız.
+            springBootSecurity     : "org.springframework.boot:spring-boot-starter-security:$versions.springBoot", // 21.12.2023 Thursday (Security ekledik)
 
             springCloudOpenFeign             : "org.springframework.cloud:spring-cloud-starter-openfeign:$versions.springCloud",
             springCloudConfigServer          : "org.springframework.cloud:spring-cloud-config-server:$versions.springCloud",
