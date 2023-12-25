@@ -12,6 +12,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -41,7 +42,7 @@ public class AuthController {
     public ResponseEntity<AuthRegisterResponseDto> registerRabbit(@RequestBody @Valid AuthRegisterRequestDto dto){
         if(!dto.getPassword().equals(dto.getRePassword()))
             throw new AuthManagerException(ErrorType.PASSWORD_MISMATCH);
-        return ResponseEntity.ok(authService.register(dto));
+        return ResponseEntity.ok(authService.registerRabbit(dto));
     }
 
     @PostMapping(LOGIN)
@@ -74,6 +75,7 @@ public class AuthController {
         return ResponseEntity.ok(jwtTokenManager.getIdFromToken(token).get());
     }
 
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @GetMapping("/getrolefromtoken")
     public ResponseEntity<String> getRoleFromToken(String token){
         return ResponseEntity.ok(jwtTokenManager.getRoleFromToken(token).get());
@@ -89,6 +91,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.changeStatusToDeleted(dto));
     }
 
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping(FINDALL)
     public ResponseEntity<List<Auth>> findAll(){
         return ResponseEntity.ok(authService.findAll());

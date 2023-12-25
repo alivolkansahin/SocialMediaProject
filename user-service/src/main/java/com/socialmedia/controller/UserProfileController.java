@@ -28,7 +28,7 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
 
     @PostMapping(SAVE)
-    public ResponseEntity<Boolean> createNewUser(@RequestBody UserSaveRequestDto dto){
+    public ResponseEntity<Boolean> createNewUser(@RequestBody UserSaveRequestDto dto, @RequestHeader("Authorization") String token){
         return ResponseEntity.ok(userProfileService.createNewUser(dto));
     }
 

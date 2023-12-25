@@ -53,7 +53,17 @@ public class AuthService extends ServiceManager<Auth, Long> {
         if(existsByUsername(dto.getUsername())) throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXISTS);
         Auth auth = IAuthMapper.INSTANCE.registerDtoToAuth(dto);
         save(auth);
-//        iUserProfileManager.createNewUser(IAuthMapper.INSTANCE.registerAuthToUserDto(auth));
+        String token = "Bearer " + jwtTokenManager.createToken(auth.getId(), auth.getRole()).get();
+        iUserProfileManager.createNewUser(IAuthMapper.INSTANCE.registerAuthToUserDto(auth), token);
+        mailProducer.sendActivationMail(IAuthMapper.INSTANCE.mailAuthToModel(auth));
+        return IAuthMapper.INSTANCE.registerAuthToDto(auth);
+    }
+
+    public AuthRegisterResponseDto registerRabbit(AuthRegisterRequestDto dto) {
+        if(existsByEmail(dto.getEmail())) throw new AuthManagerException(ErrorType.EMAIL_ALREADY_EXISTS);
+        if(existsByUsername(dto.getUsername())) throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXISTS);
+        Auth auth = IAuthMapper.INSTANCE.registerDtoToAuth(dto);
+        save(auth);
         registerProducer.sendNewUser(IAuthMapper.INSTANCE.registerAuthToModel(auth));
         mailProducer.sendActivationMail(IAuthMapper.INSTANCE.mailAuthToModel(auth));
         return IAuthMapper.INSTANCE.registerAuthToDto(auth);

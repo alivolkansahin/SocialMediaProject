@@ -7,4 +7,5 @@ buildscript {
 dependencies { // 20.12.2023 Wednesday , postgreSQL database'inden vazgeçtik mongoDBye geçtik
     implementation libs.springBootDataMongoDB
     implementation libs.springBootAmqp
+    implementation libs.springBootSecurity
 }
