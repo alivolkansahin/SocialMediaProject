@@ -14,11 +14,11 @@ public class MailSenderService {
 
     public void sendMail(MailModel model){
         SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setFrom("avolkan.shn@gmail.com");
+        mailMessage.setFrom("mail");
         mailMessage.setTo(model.getEmail());
         mailMessage.setSubject("Hesap Oluşturma Başarılı......");
         mailMessage.setText("code: " + model.getActivationCode());
-        mailMessage.setCc("avolkan.shn@gmail.com");
+        mailMessage.setCc("mail");
 
         javaMailSender.send(mailMessage);
     }
